@@ -282,11 +282,25 @@ with open(r'C:\Users\User\Desktop\ML_Model\Model_V.1\Model_Pickle_Land', 'rb') a
     mp_Land  = pickle.load(mlB)
 
 
-# In[29]:
+# In[30]:
 
 
 # mp stands for model pickle
-mp_Land.predict
+#mp_Land.predict
+
+
+# In[32]:
+
+
+#class distribution
+print(df_land_droped.groupby('UserType').size())
+
+
+# In[36]:
+
+
+# descriptions
+print(df_land_cleaned.describe())
 
 
 # In[ ]:
