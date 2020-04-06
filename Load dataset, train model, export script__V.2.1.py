@@ -230,7 +230,7 @@ XH_test.shape, YH_test.shape
 
 
 # #### Train Dataset
-# ##### Gini Index
+# ##### Gini Index = a metric to measure how often a randomly chosen element would be incorrectly identified. It means an attribute with lower gini index should be preferred.
 
 # In[25]:
 
@@ -247,7 +247,7 @@ clf_giniHouse.fit(XH_train, YH_train)
 clf_giniHouse
 
 
-# ##### Entropy
+# ##### Entropy = the measure of uncertainty of a random variable, it characterizes the impurity of an arbitrary collection of examples. The higher the entropy the more the information content.
 
 # In[27]:
 
@@ -261,7 +261,7 @@ clf_entropyHouse = DecisionTreeClassifier(criterion = "entropy", random_state = 
 
 # Performing training 
 clf_entropyHouse.fit(XH_train, YH_train) 
-clf_entropyHouse 
+clf_entropyHouse
 
 
 # #### Prediction & Accuracy
@@ -271,18 +271,18 @@ clf_entropyHouse
 
 
 # Predicton on test with giniIndex 
-YH_pred = clf_giniHouse.predict(XH_test) 
+YHgini_pred = clf_giniHouse.predict(XH_test) 
 print("Predicted values:") 
-YH_pred
+YHgini_pred
 
 
 # In[30]:
 
 
 # Predicton on test with Entropy 
-YH_pred = clf_entropyHouse.predict(XH_test) 
+YHentropy_pred = clf_entropyHouse.predict(XH_test) 
 print("Predicted values:") 
-YH_pred
+YHentropy_pred
 
 
 # ##### Calculate Accuracy
@@ -294,12 +294,39 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report 
 
 
+# ### Gini Accuracy
+
 # In[32]:
 
 
-print("Confusion Matrix: ", confusion_matrix(YH_test, YH_pred)) 
-print ("Accuracy : ", accuracy_score(YH_test, YH_pred)*100) 
-print("Report : ", classification_report(YH_test, YH_pred)) 
+print("Confusion Matrix: ", confusion_matrix(YH_test, YHgini_pred)) 
+# Confusion Matrix = a summary of prediction results on a classification problem. The number of correct and incorrect predictions are summarized with count values and broken down by each class. 
+#                           It shows the ways in which your classification model is confused when it makes predictions. It gives us insight not only into the errors being made by a classifier but more importantly the types of errors that are being made.
+#                                                        Predicted: No    Predicted: Yes
+#                               Actual: No         [      TN                  FP           ]
+#                               Actual: Yes        [      FN                  TP           ]
+print ("Accuracy : ", accuracy_score(YH_test, YHgini_pred)*100) 
+# Accuracy = (TP + TN) / (TP + TN + FP + FN); True Positive (TP) : Observation is positive, and is predicted to be positive. 
+# False Negative (FN) : Observation is positive, but is predicted negative. 
+# True Negative (TN) : Observation is negative, and is predicted to be negative. 
+# False Positive (FP) : Observation is negative, but is predicted positive.
+print("Report : ", classification_report(YH_test, YHgini_pred)) 
+# Precision = TP / (TP + TN) High Precision indicates an example labelled as positive is indeed positive (a small number of FP). Recall = TP / (TP + FN)  High Recall indicates the class is correctly recognized (a small number of FN). 
+## f1-score = (2*Recall*Precision) / (Recall + Precision) Since we have two measures (Precision and Recall) it helps to have a measurement that represents both of them. 
+##                We calculate an F-measure which uses Harmonic Mean in place of Arithmetic Mean as it punishes the extreme values more. The F-Measure will always be nearer to the smaller value of Precision or Recall.
+## High recall, low precision: This means that most of the positive examples are correctly recognized (low FN) but there are a lot of false positives. 
+## Low recall, high precision: This shows that we miss a lot of positive examples (high FN) but those we predict as positive are indeed positive (low FP) 
+## Support = amount of elements/target (in this case the amount of UserType)
+
+
+# ### Entropy Accuracy
+
+# In[33]:
+
+
+print("Confusion Matrix: ", confusion_matrix(YH_test, YHentropy_pred)) 
+print ("Accuracy : ", accuracy_score(YH_test, YHentropy_pred)*100) 
+print("Report : ", classification_report(YH_test, YHentropy_pred)) 
 
 
 # ### Decision Tree Clasifier (Land)
@@ -307,7 +334,7 @@ print("Report : ", classification_report(YH_test, YH_pred))
 # #### Data Slicing
 # ##### Split Dataset int Train and Test
 
-# In[33]:
+# In[34]:
 
 
 from sklearn.metrics import confusion_matrix 
@@ -317,29 +344,29 @@ YL = target_land
 XL_train, XL_test, YL_train, YL_test = train_test_split(XL, YL, test_size=0.3, random_state=100)
 
 
-# In[34]:
+# In[35]:
 
 
 XL_train.shape, YL_train.shape
 
 
-# In[35]:
+# In[36]:
 
 
 XL_test.shape, YL_test.shape
 
 
 # #### Train Dataset
-# ##### Gini Index
+# ##### Gini Index = a metric to measure how often a randomly chosen element would be incorrectly identified. It means an attribute with lower gini index should be preferred.
 
-# In[36]:
+# In[37]:
 
 
 # Decision Tree with Gini Index
 clf_giniLand = DecisionTreeClassifier(criterion = "gini", random_state = 100,max_depth=3, min_samples_leaf=5) 
 
 
-# In[37]:
+# In[38]:
 
 
 # Perform Training 
@@ -347,16 +374,16 @@ clf_giniLand.fit(XL_train, YL_train)
 clf_giniLand
 
 
-# ##### Entropy
+# ##### Entropy = the measure of uncertainty of a random variable, it characterizes the impurity of an arbitrary collection of examples. The higher the entropy the more the information content.
 
-# In[38]:
+# In[39]:
 
 
 # Decision Tree with Entropy 
 clf_entropyLand = DecisionTreeClassifier(criterion = "entropy", random_state = 100, max_depth = 3, min_samples_leaf = 5) 
 
 
-# In[39]:
+# In[40]:
 
 
 # Performing training 
@@ -367,30 +394,169 @@ clf_entropyLand
 # #### Prediction & Accuracy
 # ##### Prediction using Gini or Entropy
 
-# In[40]:
-
-
-# Predicton on test with giniIndex 
-YL_pred = clf_giniLand.predict(XL_test) 
-print("Predicted values:") 
-YL_pred
-
-
 # In[41]:
 
 
-# Predicton on test with Entropy 
-YL_pred = clf_entropyLand.predict(XL_test) 
+# Predicton on test with giniIndex 
+YLgini_pred = clf_giniLand.predict(XL_test) 
 print("Predicted values:") 
-YL_pred
+YLgini_pred
 
-
-# ##### Calculate Accuracy
 
 # In[42]:
 
 
-print("Confusion Matrix: ", confusion_matrix(YL_test, YL_pred)) 
-print ("Accuracy : ", accuracy_score(YL_test, YL_pred)*100) 
-print("Report : ", classification_report(YL_test, YL_pred)) 
+# Predicton on test with Entropy 
+YLentropy_pred = clf_entropyLand.predict(XL_test) 
+print("Predicted values:") 
+YLentropy_pred
+
+
+# #### Calculate Accuracy
+
+# ###### Confusion Matrix = a summary of prediction results on a classification problem. The number of correct and incorrect predictions are summarized with count values and broken down by each class. It shows the ways in which your classification model is confused when it makes predictions. It gives us insight not only into the errors being made by a classifier but more importantly the types of errors that are being made.
+# ###### Accuracy = (TP + TN) / (TP + TN + FP + FN); True Positive (TP) : Observation is positive, and is predicted to be positive. False Negative (FN) : Observation is positive, but is predicted negative. True Negative (TN) : Observation is negative, and is predicted to be negative. False Positive (FP) : Observation is negative, but is predicted positive.
+# ###### Precision = TP / (TP + TN) High Precision indicates an example labelled as positive is indeed positive (a small number of FP). Recall = TP / (TP + FN)  High Recall indicates the class is correctly recognized (a small number of FN). 
+# ###### f1-score = (2*Recall*Precision) / (Recall + Precision) Since we have two measures (Precision and Recall) it helps to have a measurement that represents both of them. We calculate an F-measure which uses Harmonic Mean in place of Arithmetic Mean as it punishes the extreme values more. The F-Measure will always be nearer to the smaller value of Precision or Recall.
+# ###### High recall, low precision: This means that most of the positive examples are correctly recognized (low FN) but there are a lot of false positives. 
+# ###### Low recall, high precision: This shows that we miss a lot of positive examples (high FN) but those we predict as positive are indeed positive (low FP) 
+# ###### Support = amount of elements/target (in this case the amount of UserType)
+
+# ### Gini Accuracy
+
+# In[43]:
+
+
+print("Confusion Matrix: ", confusion_matrix(YL_test, YLgini_pred)) 
+print ("Accuracy : ", accuracy_score(YL_test, YLgini_pred)*100) 
+print("Report : ", classification_report(YL_test, YLgini_pred)) 
+
+
+# ### Entropy Accuracy
+
+# In[44]:
+
+
+print("Confusion Matrix: ", confusion_matrix(YL_test, YLentropy_pred)) 
+print ("Accuracy : ", accuracy_score(YL_test, YLentropy_pred)*100) 
+print("Report : ", classification_report(YL_test, YLentropy_pred)) 
+
+
+# #### Export Model with Pickle
+# ##### House Model
+
+# In[45]:
+
+
+import pickle 
+
+
+# In[46]:
+
+
+with open(r'E:\Model\Model_Pickle_giniHouse_V01', 'wb') as mlA:
+    pickle.dump(clf_giniHouse,mlA)
+with open(r'E:\Model\Model_Pickle_entropyHouse_V01', 'wb') as mlA:
+    pickle.dump(clf_entropyHouse,mlA)
+
+
+# ##### Land Model
+
+# In[47]:
+
+
+with open(r'E:\Model\Model_Pickle_giniLand_V01', 'wb') as mlA:
+    pickle.dump(clf_giniLand,mlA)
+with open(r'E:\Model\Model_Pickle_entropyLand_V01', 'wb') as mlA:
+    pickle.dump(clf_entropyLand,mlA)
+
+
+# #### Load House Pickle Model
+
+# In[48]:
+
+
+with open(r'E:\Model\Model_Pickle_giniHouse_V01', 'rb') as mlA:
+    modelPickle_giniHouse = pickle.load(mlA)
+
+
+# In[49]:
+
+
+modelPickle_giniHouse.predict
+
+
+# In[50]:
+
+
+with open(r'E:\Model\Model_Pickle_entropyHouse_V01', 'rb') as mlA:
+    modelPickle_entropyHouse = pickle.load(mlA)
+
+
+# In[51]:
+
+
+modelPickle_entropyHouse.predict
+
+
+# #### Load Land Pickle Model
+
+# In[52]:
+
+
+with open(r'E:\Model\Model_Pickle_giniLand_V01', 'rb') as mlA:
+    modelPickle_giniLand = pickle.load(mlA)
+
+
+# In[53]:
+
+
+modelPickle_giniLand.predict
+
+
+# In[54]:
+
+
+with open(r'E:\Model\Model_Pickle_entropyLand_V01', 'rb') as mlA:
+    modelPickle_entropyLand = pickle.load(mlA)
+
+
+# In[55]:
+
+
+modelPickle_entropyLand.predict
+
+
+# In[61]:
+
+
+#class distribution
+print(df_house_droped.groupby('UserType').size())
+
+
+# In[56]:
+
+
+#class distribution
+print(df_land_droped.groupby('UserType').size())
+
+
+# In[59]:
+
+
+# descriptions
+print(df_house_select.describe())
+
+
+# In[60]:
+
+
+# descriptions
+print(df_land_select.describe())
+
+
+# In[ ]:
+
+
+
 
